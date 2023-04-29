@@ -1,6 +1,3 @@
-This is my technical challenge.
-
-
 ### Cloud wisdom
 
 The goal of this exercise is to show you know-how provisioning the cloud.
