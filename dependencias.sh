@@ -43,13 +43,10 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 # docker run --name glpi --link mariadb:mariadb -p 80:80 -d diouxx/glpi
 # docker run -d --name=grafana-italo -p 3000:3000 italoleitecg/grafana-italo
 
-
-
 sudo su -
 cd /root
 wget https://github.com/italoleitecg/technical-challenge/blob/main/deployment.yaml
 
-
-
-
 k3d cluster create meucluster -p "80:30000@loadbalancer"
+
+kubectl apply -f deployment.yaml
