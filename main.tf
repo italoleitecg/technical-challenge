@@ -47,12 +47,17 @@ module "docker_ec2_instance" {
   }
 }
 
-resource "aws_eip" "bootcamp-ip" {
+resource "aws_eip" "challenge-ip" {
   instance = module.docker_ec2_instance.id
   vpc      = true
 }
 
-output "bootcamp_aws_elastic_ip" {
-  value       = "http://${aws_eip.bootcamp-ip.public_ip}:80" #porta do glpi
-  description = "Public IP and Port address of the GLPI instance"
+# output "challenge_aws_elastic_ip_glpi" {
+#   value       = "http://${aws_eip.challenge-ip.public_ip}:80" #porta do glpi
+#   description = "Public IP and Port address of the GLPI instance"
+# }
+
+output "challenge_aws_elastic_ip_grafana" {
+  value       = "http://${aws_eip.challenge-ip.public_ip}:3000" #porta do grafana
+  description = "Public IP and Port address of the Grafana instance"
 }
