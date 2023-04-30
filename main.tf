@@ -34,7 +34,7 @@ module "docker_ec2_instance" {
   name = "Docker-Server"
 
   ami                    = data.aws_ami.ubuntu_linux.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.large"
   key_name               = "vockey"
   monitoring             = true
   vpc_security_group_ids = [module.docker_sg.security_group_id]
