@@ -15,11 +15,11 @@ data "aws_ami" "ubuntu_linux" {
     owners = ["099720109477"]
 }
 
-module "docker_sg" {
+module "challenge_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = "docker-sg"
-  description = "Security group para o servidor do Docker Server"
+  name        = "challenge-sg"
+  description = "Challenge server Security group"
   vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
@@ -27,20 +27,20 @@ module "docker_sg" {
   egress_rules        = ["all-all"]
 }
 
-module "docker_ec2_instance" {
+module "challenge_ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "Docker-Server"
+  name = "Challenge-Server"
 
   ami                    = data.aws_ami.ubuntu_linux.id
   instance_type          = "t3.large"
   key_name               = "vockey"
   monitoring             = true
-  vpc_security_group_ids = [module.docker_sg.security_group_id]
+  vpc_security_group_ids = [module.challenge_sg.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]
   iam_instance_profile   = "LabInstanceProfile"
-  user_data              = file("./dependencias.sh")
+  user_data              = file("./dependencies.sh")
 
   tags = {
     Terraform = "true"
@@ -48,16 +48,11 @@ module "docker_ec2_instance" {
 }
 
 resource "aws_eip" "challenge-ip" {
-  instance = module.docker_ec2_instance.id
+  instance = module.challenge_ec2_instance.id
   vpc      = true
 }
 
-# output "challenge_aws_elastic_ip_glpi" {
-#   value       = "http://${aws_eip.challenge-ip.public_ip}:80" #porta do glpi
-#   description = "Public IP and Port address of the GLPI instance"
-# }
-
 output "challenge_aws_elastic_ip_grafana" {
-  value       = "http://${aws_eip.challenge-ip.public_ip}:3000" #porta do grafana
-  description = "Public IP and Port address of the Grafana instance"
+  value       = "http://${aws_eip.challenge-ip.public_ip}" #grafana server ip
+  description = "Public IP address of the Grafana instance"
 }
