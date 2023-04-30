@@ -40,7 +40,7 @@ module "challenge_ec2_instance" {
   vpc_security_group_ids = [module.challenge_sg.security_group_id]
   subnet_id              = module.vpc.public_subnets[0]
   iam_instance_profile   = "LabInstanceProfile"
-  user_data              = file("./dependencies.sh")
+  user_data              = local.dependencies_script
 
   tags = {
     Terraform = "true"
