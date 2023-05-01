@@ -1,3 +1,4 @@
+# Retrieves the latest Ubuntu Linux AMI on AWS
 data "aws_ami" "ubuntu_linux" {
 
     most_recent = true
@@ -15,6 +16,7 @@ data "aws_ami" "ubuntu_linux" {
     owners = ["099720109477"]
 }
 
+# Terraform module creates a security group with all traffic allowed in and out for the VPC specified.
 module "challenge_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
@@ -27,6 +29,7 @@ module "challenge_sg" {
   egress_rules        = ["all-all"]
 }
 
+# Terraform module creates an EC2 instance with specified configurations.
 module "challenge_ec2_instance" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
@@ -47,12 +50,14 @@ module "challenge_ec2_instance" {
   }
 }
 
+# Creates an Elastic IP and associates it with EC2 instance created in the previous module.
 resource "aws_eip" "challenge-ip" {
   instance = module.challenge_ec2_instance.id
   vpc      = true
 }
 
+# Create an output that displays the Public IP
 output "challenge_aws_elastic_ip_grafana" {
-  value       = "http://${aws_eip.challenge-ip.public_ip}" #grafana server ip
+  value       = "http://${aws_eip.challenge-ip.public_ip} <<< Grafana's Public IP, please wait about 2 minutes to script finish." 
   description = "Public IP address of the Grafana instance"
 }

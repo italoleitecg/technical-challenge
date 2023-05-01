@@ -1,3 +1,7 @@
+# Kubernetes Deployment Manifest and Service to create a two-replica deployment of a docker image 
+# I build on my docker hub, called "italoleitecg/grafana-italo" containing a single container 
+# listening on port 3000, exposed as a service of type NodePort on port 30000. I will use k3d's 
+# port bind to redirect traffic to the application running on port 80 on the host machine.
 apiVersion: apps/v1
 kind: Deployment
 metadata: 

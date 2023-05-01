@@ -1,3 +1,4 @@
+# Terraform module to create a VPC in AWS.
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
