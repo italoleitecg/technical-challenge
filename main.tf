@@ -16,7 +16,6 @@ data "aws_ami" "ubuntu_linux" {
     owners = ["099720109477"]
 }
 
-# Terraform module creates a security group with all traffic allowed in and out for the VPC specified.
 module "challenge_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
@@ -24,9 +23,29 @@ module "challenge_sg" {
   description = "Challenge server Security group"
   vpc_id      = module.vpc.vpc_id
 
+  # allow incoming traffic from any IP address to the SG
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["all-all"]
-  egress_rules        = ["all-all"]
+
+  # Allow incoming traffic on port 22
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      description = "SSH Access"
+      cidr_blocks = "0.0.0.0/0"
+    },
+    # Allow incoming traffic on port 80
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      description = "Http access"
+      cidr_blocks = "0.0.0.0/0"
+    },
+  ]
+  # Allow all outgoing traffic
+  egress_rules = ["all-all"]
 }
 
 # Terraform module creates an EC2 instance with specified configurations.
